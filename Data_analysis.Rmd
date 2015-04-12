@@ -1,0 +1,638 @@
+
+---
+title: "Analiza ankete"
+author: "Bartol Freškura"
+date: "Srijeda, Travanj 08, 2015"
+output:
+  html_document:
+    fig_height: 8
+    fig_width: 12
+    theme: cerulean
+    toc: yes
+    toc_depth: 4
+  word_document: default
+---
+ <br><br>
+  <br><br>
+  
+## Pretpostavke
+
+U anketi je sudjelovalo 259 ispitanika. Razmatranja iz ankete vrijede sigurno za prikupljeni uzorak ljudi, ali ne mogu se generalizirati
+na cijelu populaciju mladih (15-25 godina) u Republici Hrvatskoj zbog sljedeæih razloga:
+
+<ol>
+  <li>Anketa je bila online. Iako je danas veæina mladih dobro upoznata s uslugama Interneta i koristi ih na dnevnoj bazi, postoji udio mladih
+      koji nisu èesto na Internetu ili ga uopæe ne koriste, tako da taj udio je iskljuèen iz analize ankete <br><br></li>
+      
+  <li>Veæina ispitanika je iz podruèja Grada Zagreba (55%) što takoðer utjeèe na reprezentabilnost uzorka i generaliziranje
+    na cijelu populaciju. Smatra se da ako su ispitanici iz iste županije da postoji veæi koeficjent zavisnosti meðu njima (
+    npr. prijatelj je mogao utjecati na odgovore drugog prijatelja jer imaju vrlo sliènu lokaciju prebivanja, opæenito socijalni status i naèin življenja im se        ne razlikuje previše). <br><br></li>
+    
+  <li>
+    82% ispitanika su studenti, a 90% ispitanika ima izmeðu 19-25 godina. To ukazuje da u anketi nedostajte ispitanika koji pohaðaju srednju školu i aktivno   rade. 
+    Razumno je pretpostaviti da mladi izmeðu 15 i 18 godina nemaju još otvoren raèun u banci jer se roditelji brinu o njihovim financijama stoga ih
+    ni anketa nije zanimala što je rezultiralo niskim odazivom tog dijela populacije.
+    Ako se sagleda generalna situacija, srednjoškolci opæenito nisu još upoznati s bankarskim usluga, pa je logièno da primarna populacija ankete nisu
+  bili oni, veæ ostatak populacije koji redovno koristi bankarske usluge jer na temelju toga se radi analiza trenutnog stanja.</li>
+</ol>
+  
+<br><br>
+
+##Analiza
+
+
+
+
+
+```{r  echo=FALSE}
+
+tablicaMain = read.csv(file = "csc_banking.csv", sep = ';', header = T)
+
+
+
+```
+
+
+###Raspodjela spolova
+
+```{r  echo=FALSE}
+prop.table(table(tablicaMain$Gender))*100
+
+plot(tablicaMain$Gender, xlab="Spol", ylab ="Broj ispitanika", ylim=c(0,160), col=c("lightblue"), main="Raspodjela ispitanika po spolu")           
+```
+Kao što se može vidjeti iz grafa, udio ženkse populacije je malo viši nego od muške populacije.
+
+
+
+###Raspodjela po godinama
+
+```{r  echo=FALSE}
+
+##Pocisti vrijednosti koje nisu bitne
+godine=c(NA)
+for(i in tablicaMain$Age){
+  
+      godine=c(godine, i)
+    
+}
+
+prop.table(table(godine))*100
+
+Age=data.frame(godine)
+plot(Age$godine, xlab="Dob", ylab ="Broj ispitanika", ylim=c(0,270), col=c("lightblue"), main="Raspodjela ispitanika godinama")
+
+```
+Veæina ispitanika je imala izmeðu 19 i 25 godina. Taj podatak je zadovoljavajuæ jer je upravo to bila ciljana populacija, iako je trebalo biti više
+ispitanika koji imaju izmedu 15 i 18 godina.
+
+###Raspodjela po radnom statusu
+
+```{r  echo=FALSE}
+prop.table(table(tablicaMain$WorkingStatus))*100
+
+plot(tablicaMain$WorkingStatus, xlab="Radni status", ylab ="Broj ispitanika", ylim=c(0,250), col=c("lightblue"), main="Raspodjela ispitanika po radnom statusu")
+          
+```
+Analiza varijable radnog stanja potvrðuje da smo pogodili ciljanu populaciju. Uoèljivo je da visok postotak ispitanika ima radni status studenta što je i za oèekivati, no udio zaposlenih bi trebao biti veæi jer je za oèekivati da zaposleni èešæe koriste bankarske usluge.
+
+
+###Parametri prema kojima se ljudi odreðuju za banke
+```{r  echo=FALSE}
+#Prilagoðavanje podataka
+why=c(NA)
+for(i in tablicaMain$WhyBank){
+  if(i=="Najbolji uvjeti i pogodnosti" |  i=="Preporuka prijatelja ili rodbine" |  i=="Pristupaènost")
+    {
+      why=c(why, i)
+    }
+  else{
+    why=c(why, "Ostalo")
+  }
+}
+zasto=data.frame(why)
+
+prop.table(table(why))*100
+
+
+plot(zasto$why, xlab="Zašto ste se odluèili za banku?", ylab ="Broj ispitanika", ylim=c(0,150), col=c("lightblue"), main="Raspodjela ispitanika po parametru biranja banke", beside = TRUE)
+             
+```
+
+Pristupaènost i preporuka odstupaju od prosjeka èime se ukazuje da mladi ne biraju banke po uvjetima koji im nude što bi bilo najbolje za njih. To bi trebalo promijeniti jer vrlo je vjerojatno da ako se odluèi za odreðenu banku da æe ju koristiti na duži period.
+
+
+###Uèestalost korištenja bankomata
+
+```{r  echo=FALSE}
+#Prilagoðavanje podataka
+
+prop.table(table(tablicaMain$ATMUsage))*100
+
+plot(tablicaMain$ATMUsage, xlab="Koliko èesto koristite bankomat?", ylab ="Broj ispitanika", ylim=c(0,120), col=c("lightblue"), main="Raspodjela ispitanika po korištenju bankomata", beside = TRUE)
+
+       
+       
+```
+Korišenje bankomata nije previše izraženo (prosjek je izmeðu  jedom u dva tjedna i jednom tjedno).
+
+
+
+###Ocjena bankarskih usluga koje se nude 
+
+```{r  echo=FALSE}
+#Prilagoðavanje podataka
+
+paste("Statistika")
+summary(tablicaMain$ScoreBankingServices)
+
+##Mean
+est= mean(tablicaMain$ScoreBankingServices)
+
+paste("Tablica frekvencija")
+prop.table(table(tablicaMain$ScoreBankingServices))*100
+
+sd=sd(tablicaMain$ScoreBankingServices)
+
+paste("Standardna devijacija: " , sd)
+
+#Raèun podruèja pouzdanosti (95%)
+error <- qnorm(0.975)*sd/sqrt(nrow(tablicaMain))
+left <- est-error
+right <- est+error
+
+paste("Interval pouzdanosti od 95% je :" ,left, " - ", right)
+
+barplot(table(tablicaMain$ScoreBankingServices), col=c("lightblue"), ylim = c(0, 120), xlab="Ocjena", ylab="Broj ispitanika", main="Raspodjela ocjena bankarskih usluga")
+     
+       
+```
+
+Prosjeèna ocjena je 3.07 (interval od 0 do 6). Standarna devijacija je 1.32. Raèunom dobivamo da je interval pouzdanosti od 95% jednak od 2.91 do 3.24.
+Zakljuèke ne možemo dovoditi zbog upitne nezavisnosti podataka i nedostatka ispitanika iz odreðenih dobnih skupina.
+
+###Ocjena Internet sigurnosti 
+
+```{r  echo=FALSE}
+#Prilagoðavanje podataka
+
+paste("Statistika")
+
+safety = na.omit(tablicaMain$InternetSafety)
+
+summary(safety)
+
+##Mean
+est= mean(safety)
+
+paste("Tablica frekvencija")
+prop.table(table(safety))*100
+
+sd= sd(safety)
+
+paste("Standardna devijacija: " , sd)
+
+#Raèun podruèja pouzdanosti (95%)
+error <- qnorm(0.975)*sd/sqrt(length(safety))
+left <- est-error
+right <- est+error
+
+paste("Interval pouzdanosti od 95% je :" ,left, " - ", right)
+
+
+barplot(table(tablicaMain$InternetSafety), col=c("lightblue"), ylim = c(0, 100), xlab="Ocjena", ylab="Broj ispitanika", main="Raspodjela ocjena sigurnosti Internet kupovine") 
+       
+```
+
+Prosjeèna ocjena je 3.02 (interval od 1 do 5). Standarna devijacija je 1.12 . Raèunom dobivamo da je interval pouzdanosti od 95% jednak od 2.88 do 3.17.
+Zakljuèke ne možemo dovoditi zbog upitne nezavisnosti podataka i nedostatka ispitanika iz odreðenih dobnih skupina.
+Graf je blago nagnut na desno, no to nije dovoljno dobar indikator da se mladi osjeæaju sigurnije na internetu od prosjeka (prosjek se uzima da je 3).
+
+
+
+###Ocjena sigurnosti Internet bankarstva
+
+```{r  echo=FALSE}
+#Prilagoðavanje podataka
+
+paste("Statistika")
+
+safety = na.omit(tablicaMain$InternetBankingSafety)
+
+summary(safety)
+
+##Mean
+est= mean(safety)
+
+paste("Tablica frekvencija")
+prop.table(table(safety))*100
+
+sd=sd(safety)
+
+paste("Standardna devijacija: " , sd)
+
+#Raèun podruèja pouzdanosti (95%)
+error <- qnorm(0.975)*sd/sqrt(length(safety))
+left <- est-error
+right <- est+error
+
+paste("Interval pouzdanosti od 95% je :" ,left, " - ", right)
+
+
+barplot(table(tablicaMain$InternetBankingSafety), col=c("lightblue"), ylim = c(0, 100), xlab="Ocjena", ylab="Broj ispitanika", main="Raspodjela ocjena sigurnosti Internet bankarstva")
+ 
+
+##Da li odstupa od prosjeka (prosjek = 3, samo pretpostavka)
+#H0 -> nema razlike u ocjeni sigurnosti izmeðu ove skupine i populacije
+#H1 -> ova skupina ima višu ocjenu od prosjeka populacije
+
+delta= est - 3
+
+zScore= (delta)/ (sd/sqrt(length(safety)))
+p= 1-pnorm(zScore)
+
+##Signf levele alpha = 0.01
+       
+```
+
+Prosjeèna ocjena je 3.27 (interval od 1 do 5). Standarna devijacija je 1.20 . Raèunom dobivamo da je interval pouzdanosti od 95% jednak od 3.12 do 3.43.
+
+Uz pretpostavku da je prosjeèna ocjena populacija za sigurnost jednaka 3, možemo provjeriti dali ova skupina odstupa od populacije.
+Poèetna pretpostavka nam je da odstupanja nema tj. razlika izmeðu prosjecne ocjene u ovoj skupini i prosjeène ocjene populacije je jednaka nuli.
+Alternativna hipoteza je da je ocjena ove skupine veæa od ocjene prosjeène populacije.
+
+Uz malo raèuna se dobiva da je p vrijednost jednaka 0.00018 što je manje od  razine signifikantnosti od 0.01 (uzeli smo manju razinu signifikantnosti zbog upitne nezavisnosti podataka i nedostatka ispitanika iz odreðenih dobnih skupina), te na temelju toga odbacujemo poèetnu hipotezu.
+Ovim zakljuèkom možemo povuæi samo korelacijsku vezu da mladi bolje ocjenjuju sigurnost internet bankarstva od populacije.
+
+
+
+
+
+###Ocjena pogodnosti koje se nude mladima
+
+```{r  echo=FALSE}
+
+paste("Statistika")
+
+benefits = na.omit(tablicaMain$YouthBenefits)
+
+summary(benefits)
+
+##Mean
+est= mean(benefits)
+
+paste("Tablica frekvencija")
+prop.table(table(benefits))*100
+
+sd= sd(benefits)
+
+paste("Standardna devijacija: " , sd)
+
+#Raèun podruèja pouzdanosti (95%)
+error <- qnorm(0.975)*sd/sqrt(length(safety))
+left <- est-error
+right <- est+error
+
+paste("Interval pouzdanosti od 95% je :" ,left, " - ", right)
+
+barplot(table(tablicaMain$YouthBenefits), col=c("lightblue"), ylim = c(0, 90), xlab="Ocjena", ylab="Broj ispitanika", main="Raspodjela ocjena pogodnosti koje se nude mladima")
+       
+```
+
+Prosjeèna ocjena je 4.17 (interval od 1 do 8). Standarna devijacija je 1.64 . Raèunom dobivamo da je interval pouzdanosti od 95% jednak od 3,97 do 4,39.
+Zakljuèke ne možemo dovoditi zbog upitne nezavisnosti podataka i nedostatka ispitanika iz odreðenih dobnih skupina.
+
+
+
+
+###Raspodjela po bankama u kojima ispitanici imaju otvorene raèune
+```{r  echo=FALSE}
+
+### CLEAN DATA####
+
+
+##prebaci sve u jedan vektor
+x=tablicaMain$BanksOpenAccount
+vector=c(NA)
+for(i in (x)){
+
+  if(grepl(pattern = ";", i)==TRUE){
+  
+    pom=strsplit(i, split=";")
+  #  print(pom)
+
+    for(j in (pom)){
+      #print(j)
+      for(k in 1:length(j)){
+       j[k]=gsub("\\s+","",j[k])
+      # print(j[k])
+       #print(j[1])
+      vector=c(vector, j[k])
+      }
+      
+    }
+    
+  }
+  
+  else{
+    i=gsub("\\s+","",i)
+    vector=c(vector, i)
+  }
+}
+
+vector=na.omit(vector)
+
+
+##formatiraj
+acc=data.frame(vector)
+
+temp = c(NA)
+
+
+for(i in acc$vector){
+   
+  if(tolower(i)=="erste"  |  tolower(i)=="splitska" | tolower(i)=="zagrebaèka" | tolower(i)=="pbz" | tolower(i)=="nemamraèun" | tolower(i)=="raiffeisen")
+  
+    {
+  #  paste("wuf")
+      temp=c(temp, i)
+    }
+  else{
+    temp=c(temp, "Ostalo")
+  }
+}
+
+#acc=data.frame(temp)
+
+temp=na.omit(temp)
+acc=data.frame(temp)
+
+
+paste("PBZ: " , 105/259*100, "%")
+paste("Zagrebaèka: " , 77/259*100, "%")
+paste("Raiffeisen: " , 16/259*100, "%")
+paste("Splitska: " , 24/259, "%")
+paste("Nemam raèun: " , 9/259*100, "%")
+paste("Ostalo: " , 36/259*100, "%")
+
+
+plot(acc$temp, xlab="U kojim bankama imate raèun?", ylab ="Broj ispitanika", ylim=c(0,120), col=c("lightblue"), main="Raspodjela ispitanika po bankama u kojima posjeduju raèune", beside = TRUE)
+
+```
+
+
+
+###Raspodjela po usluga koje banka nudi
+```{r  echo=FALSE}
+
+### CLEAN DATA####
+
+
+##prebaci sve u jedan vektor
+x=tablicaMain$BankServices
+vector=c(NA)
+for(i in (x)){
+
+  if(grepl(pattern = ";", i)==TRUE){
+  
+    pom=strsplit(i, split="; ")
+  #  print(pom)
+
+    for(j in (pom)){
+      #print(j)
+      #j=gsub("\\s+","",j)
+      for(k in 1:length(j)){
+       
+      #  print(j[k])
+       #print(j[1])
+      vector=c(vector, j[k])
+      }
+      
+    }
+    
+  }
+  
+  else{
+   # i=gsub("\\s+","",i)
+    vector=c(vector, i)
+  }
+}
+
+vector=na.omit(vector)
+
+
+##formatiraj
+serv=data.frame(vector)
+
+temp = c(NA)
+
+
+
+
+for(i in serv$vector){
+  if(tolower(i)=="mobilno bankarstvo"  |  tolower(i)=="internet bankarstvo" | tolower(i)=="debitna ili kreditna kartica" | tolower(i)=="studentski paket (uljuèuje sve)" | tolower(i)=="kontaktiranje vašeg savjetnika u banci" | tolower(i)=="štednja" | tolower(i)=="provjera stanja na raèunu" | tolower(i)=="plaæanje raèuna"  | tolower(i)=="ne koristim bankarske usluge" )
+    {
+    #paste("wuf")
+    temp=c(temp, i)
+    }
+  else{
+    temp=c(temp, "Ostalo")
+  }
+}
+
+
+temp=na.omit(temp)
+serv=data.frame(temp)
+table(serv)
+
+
+paste("Debitna ili kreditna kartica: " , 83/259*100, "%")
+paste("Internet bankarstvo: " , 97/259*100, "%")
+paste("Investiranje : " , 11/259*100, "%")
+paste("Kontaktiranje Vašeg savjetnika u banci: " , 12/259*100, "%")
+paste("Kredit: " , 3/259, "%")
+paste("Mobilno bankarstvo : " , 74/259*100, "%")
+paste("Ne koristim bankarske usluge : " , 20/259*100, "%")
+paste("Osiguranje: " , 5/259*100, "%")
+paste("Ostalo:" , 3/259*100, "%")
+paste("Plaæanje raèuna:" , 60/259*100, "%")
+paste("Provjera stanja na raèunu: " , 143/259*100, "%")
+paste("Studentski paket (uljuèuje sve): " , 94/259*100, "%")
+paste("Štednja " , 57/259*100, "%")
+
+
+
+plot(serv$temp, xlab="Koje bankarske usluge koristite?", ylab ="Broj ispitanika", ylim=c(0,160), col=c("lightblue"), main="Raspodjela ispitanika po uslugama koje koriste", beside = TRUE, cex.names=0.75)
+
+```
+<i>**Napomena: pojedine varijable su pridružene kategoriji "Ostalo" radi jednostavnosti grafa</i>
+<p>Kategorija koja najviše odstupa je provjera stanja na raèunu, a tri kategorije koje su podjednako rasporeðene su: Debitna ili kreditna kartica, Internet bankarstvo i studentski paket. Valja uoèiti da su Internet bankarstvo, pa èak i mobilno bankarstvo na relativnoj visokoj razini ali taj bi se postotak mogao poveæati. Ostale kategorije nisu pretjerano izražene, iako se oèekivalo da bi plaæanje raèuna bilo više zastupljeno. 
+</p>
+
+
+###Raspodjela po razlogu da se poène koristiti ili da se više koristi Internet bankarstvo
+```{r fig.width=12, fig.height=10,  echo=FALSE}
+
+### CLEAN DATA####
+
+
+##prebaci sve u jedan vektor
+x=tablicaMain$InternetBankMoreUsage
+vector=c(NA)
+for(i in (x)){
+
+  if(grepl(pattern = ";", i)==TRUE){
+  
+    pom=strsplit(i, split="; ")
+  #  print(pom)
+
+    for(j in (pom)){
+     # print(j)
+      #j=gsub("\\s+","",j)
+      for(k in 1:length(j)){
+       
+      #  print(j[k])
+       #print(j[1])
+      vector=c(vector, j[k])
+      }
+      
+    }
+    
+  }
+  
+  else{
+   # i=gsub("\\s+","",i)
+    vector=c(vector, i)
+  }
+}
+
+vector=na.omit(vector)
+
+
+##formatiraj
+usage=data.frame(vector)
+
+temp = c(NA)
+
+
+
+
+for(i in usage$vector){
+  if(tolower(i)=="nagrade (smanjene cijene za odreðene usluge)"  |  tolower(i)=="jednostavnija i jasnija usluga" | tolower(i)=="veæa sigurnost"  | tolower(i)=="besplatne transakcije" | tolower(i)=="sve je savršeno, ne bih ništa promijenio/la" | 
+       tolower(i)=="bolja uputstva za postavljanje internet usluga")
+
+    {
+    #paste("wuf")
+    temp=c(temp, i)
+    }
+  else{
+    temp=c(temp, "Ostalo")
+  }
+}
+
+
+temp=na.omit(temp)
+usage=data.frame(temp)
+table(usage)
+
+
+paste("Besplatne transakcije " , 130/259*100, "%")
+paste("Bolja uputstva za postavljanje Internet usluga: " , 32/259*100, "%")
+paste("Jednostavnija i jasnija usluga: " , 78/259*100, "%")
+paste(" Nagrade (smanjene cijene za odreðene usluge): " , 101/259*100, "%")
+paste("Ostalo: " , 11/259, "%")
+paste("Sve je savršeno, ne bih ništa promijenio/la: " , 24/259*100, "%")
+paste("Telefonska pomoæ pri postavaljanju Internet usluga: " , 9/259*100, "%")
+paste("Veæa sigurnost: " , 71/259*100, "%")
+
+
+
+plot(usage$temp, xlab="Što bi Vas potaklo da poènete koristiti (ili da više koristite) Internet bankarstvo? ", ylab ="Broj ispitanika", ylim=c(0,160), col=c("lightblue"), main="Raspodjela po razlogu da se poène koristiti ili da se više koristi Internet bankarstvo", beside = TRUE, cex.names=0.75)
+
+```
+<i>**Napomena: pojedine varijable su pridružene kategoriji "Ostalo" radi jednostavnosti grafa</i>
+<p>Najzastupljenja varijabla su besplatne transakcije. Mladi imaju dosta uzak budžet, pa je to moguæ razlog zašto im toliko smetaju naknade transakcija. Nagrade su druga po redu zastupljena varijabla koja se u bankama realizira pomoæu loyalti programa. Vidljivo je da mladi imaju prilièno veliku zainteresiranost za takve usluge i zbog toga bi se trebao napraviti loyalti program prilagoðen samo tom dijelu populacije. 
+Sigurnost i jasnija usluga su jednako raspodijeljeni i nose srednje velik udio, stoga su i ta podruèja otvorena za poboljšanja. 
+</p>
+
+
+###Raspodjela po županijama u %
+```{r  echo=FALSE}
+
+prop.table(table(tablicaMain$GeoLocation))*100
+```
+<p> Polovica ispitanika je iz grada Zagreba što i nije savršeno reprezantativno ako hoæemo promatrati preslikavanje na cijelu popualciju. Iz odreðenog broja
+županija uopæe nije bilo odaziva. </p>
+
+
+
+###Ostali zanimljivi grafovi i promatranja
+
+####Ocjene pogodnosti koje se nude po spolu
+```{r  echo=FALSE}
+##Significance level = 0.02
+
+l=table(tablicaMain$Gender, tablicaMain$WhyBank)
+prop.table(l, 2)*100
+barplot(l, col=c("lightblue", "chocolate1"), ylim = c(0, 80), xlab="Parametar", ylab="Broj ispitanika", main="Raspodjela ispitanika po parametru biranja banke i po spolu", beside=T )
+legend("topright",     legend = c("Muško", "Žensko"), 
+       fill = c("lightblue", "chocolate1"))
+
+
+ppool=(46+73)/259
+se=sqrt((ppool*(1-ppool)/46) + (ppool*(1-ppool)/73))
+
+zScore= (0.613-0.387)/ se
+
+p= 1-pnorm(zScore)
+paste("p vrijednost:")
+2*p
+
+
+```
+<p>Graf Raspodjele ocjena pogodnosti se nude mladima ima zanimljiv podatak ako se podijele ispitanici po spolu. Uoèljivo je da se osobe ženskog spola više odluèuju za banke pomoæu preporuka nego osobe muškog spola što je i izraèunato pomoæu statistièke analize (p vrijednost je manja od razine signifikantnosti koja je postavljena na 0.02). Takoðer moramo uzeti u obzir da je broj žena bio nešto viši od broja muškaraca što takoðer utjeèe na rezultat.  </p>
+
+
+<br><br>
+
+####Uèestalost korištenja bankomata po spolu
+```{r  echo=FALSE}
+##Significance level = 0.02
+
+l=table(tablicaMain$Gender, tablicaMain$ATMUsage)
+prop.table(l, 2)*100
+barplot(l, col=c("lightblue", "chocolate1"), ylim = c(0, 60), xlab="Uèestalost", ylab="Broj ispitanika", main="Raspodjela ispitanika po uèestalosti korištenja bankomata i po spolu", beside=T )
+legend("topright",     legend = c("Muško", "Žensko"), 
+       fill = c("lightblue", "chocolate1"))
+
+
+ppool=(49+26)/259
+se=sqrt((ppool*(1-ppool)/49) + (ppool*(1-ppool)/26))
+
+zScore= (0.653-0.346)/ se
+
+p= 1-pnorm(zScore)
+paste("p vrijednost:")
+2*p
+
+
+```
+<p>Ako razmatramo raspodjelu ispitanika po uèestalosti korištenja banomata, ali da ih još podijelimo po spolu, onda takoðer zapažamo anomaliju u grafu.
+Udio žena koje jednom tjedno koriste bankomat je znatno veæi od udjela muškaraca koji ga koriste jednom tjedno. Raèunom dobivamo da je ta hipoteza toèna i odbacujemo hipotezu da su udjeli korištenja bankomata jednom tjedno jednaki izmeðu muškog i ženskog spola.  </p>
+<br><br>
+
+####Ocjena bankarskih usluga po spolu raspodjela
+
+```{r  echo=FALSE}
+l=table(tablicaMain$Gender, tablicaMain$ScoreBankingServices)
+prop.table(l, 2)*100
+barplot(l, col=c("lightblue", "chocolate1"), ylim = c(0, 80), xlab="Ocjena", ylab="Broj ispitanika", main="Raspodjela ispitanika po ocjeni usluga koje banka nudi i po spolu", beside=T )
+legend("topright",     legend = c("Muško", "Žensko"), 
+       fill = c("lightblue", "chocolate1"))
+```
+<p>Može se uoèiti da više žena daje ocjene 3 i 2, te da muškarci imaju nešto viši udio u davanju ocjena iznad 3.</p>
+
+<br>
+
+###Napomene
+<p>Pitanje u kojem se tražilo od ispitanika da napišu koje funkcije bi htjeli dodati u mobilnu u aplikaciju nije ovdje analizirano veæ su samo odgovori
+prihvaæeni kao sugestije koje su kasnije razraðene</p>
