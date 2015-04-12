@@ -13,7 +13,6 @@ output:
   word_document: default
 ---
  <br><br>
-  <br><br>
   
 ## Pretpostavke
 
