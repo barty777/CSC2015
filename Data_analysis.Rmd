@@ -1,8 +1,6 @@
 
 ---
 title: "Analiza ankete"
-author: "Bartol Freškura"
-date: "Srijeda, Travanj 08, 2015"
 output:
   html_document:
     fig_height: 8
