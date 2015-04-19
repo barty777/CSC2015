@@ -1,4 +1,4 @@
-Id;NetworkID;Age;Gender;WorkingStatus;GeoLocation;BanksOpenAccount;WhyBank;ATMUsage;BankServices;EsejMobilno;InternetBankMoreUsage;ScoreBankingServices;InternetSafety;InternetBankingSafety;YouthBenefits
+Id;NetworkID;Age;Gender;WorkingStatus;GeoLocation;BanksOpenAccount;WhyBank;ATMUsage;BankServices;TextMobileBanking;InternetBankMoreUsage;ScoreBankingServices;InternetSafety;InternetBankingSafety;YouthBenefits
 6;af250f00e5ec13095ad081bf79cceeaa8177b713;Od 16 do 25;Muško;Student/ica;Grad Zagreb;Raiffeisen;Pristupaènost;Dva do èetiri puta tjedno;"Internet bankarstvo; Debitna ili kreditna kartica; Provjera stanja na raèunu";;"Veæa sigurnost; Besplatne transakcije";2;3;4;5
 8;87ce42603d7b13912b65bdd106588a90be920ba1;Od 15 do 25;Muško;Student/ica;Zagrebaèka županija;Raiffeisen;Preporuka prijatelja ili rodbine;Dva do èetiri puta tjedno;Provjera stanja na raèunu;;"Nagrade (smanjene cijene za odreðene usluge); Veæa sigurnost";1;1;1;1
 10;63f81a6df2dd6c5306c097af7692f25ff3ec1050;Od 15 do 25;Muško;Student/ica;Grad Zagreb;ERSTE;Preporuka prijatelja ili rodbine;Ne koristim bankomat;"Debitna ili kreditna kartica; Štednja";;Jednostavnija i jasnija usluga;2;3;3;5
